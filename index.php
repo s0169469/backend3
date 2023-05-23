@@ -31,7 +31,7 @@ if (empty($_POST['year']) || !is_numeric($_POST['year']) || !preg_match('/^\d+$/
 }
 
 if (empty($_POST['email']) || !preg_match('/^((([0-9A-Za-z]{1}[-0-9A-z\.]{1,}[0-9A-Za-z]{1})|([0-9А-Яа-я]{1}[-0-9А-я\.]{1,}[0-9А-Яа-я]{1}))@([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$/u',$_POST['email'])) {
-  print('Зфполните email.<br/>');
+  print('Зaполните email.<br/>');
   $errors = TRUE;
 }
 
@@ -49,7 +49,7 @@ if (empty($_POST['biography']) || !preg_match('/^([0-9a-zA-Zа-яА-Я\,\.\s]{1,
   $errors = TRUE;
 }
 if (empty($_POST['ability'])) {
-  print('Заполните сферхспособности.<br/>');
+  print('Заполните сверхспособности.<br/>');
   $errors = TRUE;
 }
 
@@ -66,8 +66,8 @@ if ($errors) {
 
 // Сохранение в базу данных.
 
-$user = 'u52996';
-$pass = '6060818';
+$user = 'u51489';
+$pass = '7565858';
 $db = new PDO('mysql:host=localhost;dbname=u52996', $user, $pass, [PDO::ATTR_PERSISTENT => true]);
 
 // Подготовленный запрос. Не именованные метки.
