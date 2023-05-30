@@ -65,44 +65,52 @@ if ($errors) {
 }
 
 // Сохранение в базу данных.
-
 $user = 'u51489';
 $pass = '7565858';
-$db = new PDO('mysql:host=localhost;dbname=u51489', $user, $pass, [PDO::ATTR_PERSISTENT => true]);
+$db = new PDO('mysql:host=localhost;dbname=u51489', $user, $pass,
+  [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]); 
 
-// Подготовленный запрос. Не именованные метки.
 try {
-  $stmt = $db->prepare("INSERT INTO application SET name = ?, email=?, year=?, gender=?, biography=?, limbs=?");
-  $stmt -> execute([$_POST['fio'], $_POST['email'],$_POST['year'],$_POST['gender'], $_POST['biography'],$_POST['limbs'] ]);
-  $app_id = $db->lastInsertId();
-  $stmt = $db->prepare("INSERT INTO ability_application SET ability_id= ?, application_id=?");
-  foreach ($_POST['ability'] as $ability) {
-    $stmt->execute([$ability, $app_id]);
-  }
+  $stmt = $db->prepare("INSERT INTO application SET name = ?, email = ?, year = ?, gender = ?, biography = ?, limbs = ?");
+  $stmt -> execute([$_POST['name'], $_POST['email'], $_POST['year'], $_POST['gender'], $_POST['biography'], $_POST['limbs'] ]);
 }
-catch(PDOException $e){
+catch(PDOException $e) {
   print('Error : ' . $e->getMessage());
   exit();
 }
 
-//  stmt - это "дескриптор состояния".
- 
-//  Именованные метки.
-//$stmt = $db->prepare("INSERT INTO test (label,color) VALUES (:label,:color)");
-//$stmt -> execute(['label'=>'perfect', 'color'=>'green']);
- 
-//Еще вариант
-/*$stmt = $db->prepare("INSERT INTO users (firstname, lastname, email) VALUES (:firstname, :lastname, :email)");
-$stmt->bindParam(':firstname', $firstname);
-$stmt->bindParam(':lastname', $lastname);
-$stmt->bindParam(':email', $email);
-$firstname = "John";
-$lastname = "Smith";
-$email = "john@test.com";
-$stmt->execute();
-*/
+$app_id = $db->lastInsertId();
 
-// Делаем перенаправление.
-// Если запись не сохраняется, но ошибок не видно, то можно закомментировать эту строку чтобы увидеть ошибку.
-// Если ошибок при этом не видно, то необходимо настроить параметр display_errors для PHP.
+try{
+  $stmt = $db->prepare("REPLACE INTO abilities (id,name_of_ability) VALUES (10, 'Бессмертие'), (20, 'Прохождение сквозь стены'), (30, 'Левитация')");
+  $stmt-> execute();
+}
+catch (PDOException $e) {
+        print('Error : ' . $e->getMessage());
+        exit();
+}
+
+//try {
+  //$stmt = $db->prepare("INSERT INTO link SET app_id = ?, ab_id = ?");
+  //foreach ($_POST['abilities'] as $ability) {
+  //$stmt -> execute([$app_id, $ability]);
+  //}
+//}
+try {
+  $stmt = $db->prepare("INSERT INTO ability_application SET application_id = ?, ability_id = ?");
+  foreach ($_POST['abilities'] as $ability) {
+    if ($ability=='Бессмертие')
+    {$stmt -> execute([$application_id, 10]);}
+    else if ($ability=='Прохождение сквозь стены')
+    {$stmt -> execute([$application_id, 20]);}
+    else if ($ability=='Левитация')
+    {$stmt -> execute([$application_id, 30]);}
+  }
+}
+catch(PDOException $e) {
+  print('Error : ' . $e->getMessage());
+  exit();
+}
+
 header('Location: ?save=1');
+
